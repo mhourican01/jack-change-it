@@ -20,18 +20,25 @@ def playGame():
 
 def displayCards(p):
 
+    playableCards = {}
+    cardNumber = 1
+
     print("Your cards are:")
+
     for c in p.hand:
+
         print(str(c.rank) + " of " + c.suit)
+
+        if (c.rank == upcard.rank or c.suit == upcard.suit):
+            
+            playableCards[cardNumber] = c
+            cardNumber += 1
 
     print("Which would you like to play?")
 
-    playableCards = {}
-    
-    for c in p.hand:
-        if (c.rank == upcard.rank or c.suit == upcard.suit):
+    for n, c in playableCards.items():
 
-            print(str(c.rank) + " of " + c.suit)
+        print(str(n) + ".", str(c.rank) + " of " + c.suit)
 
 def initialiseGame():
 
