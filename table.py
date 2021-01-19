@@ -40,6 +40,7 @@ def initialiseGame():
     dealCards()
     playGame()
 
+# Creates card objects and adds them to deck list
 def createDeck():
 
     for s in suits:
