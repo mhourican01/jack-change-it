@@ -104,15 +104,12 @@ def playTurn(upcard):
         playableCards = displayCards(p)
 
         if not playableCards:
-            print("You have no playable cards! Draw two.")
+            print("You have no playable cards! Draw a card.")
             p.hand.append(deck[0])
-            p.hand.append(deck[1])
 
             deck.pop(0)
-            deck.pop(1)
             
         else:
-
             print("You can play:")
 
             # Displaying playable cards beside number for selection
@@ -127,6 +124,9 @@ def playTurn(upcard):
 
                 if int(selectedCard) == (playableCards.index(c) + 1):
                     
+                    if c.rank == 2:
+                        drawTwoCards(p)
+
                     if len(p.hand) > 1:
                         # Change upcard to card user played
                         upcard = c
@@ -145,5 +145,18 @@ def playTurn(upcard):
 
         if p.number == len(players):
             playTurn(upcard)
+
+def drawTwoCards(p):
+
+    currentPlayerIndex = players.index(p)
+    nextPlayer = players[currentPlayerIndex + 1]
+
+    print("You have played a Two! Player " + str(nextPlayer.number) + "must draw two cards.")
+
+    nextPlayer.hand.append(deck[0])
+    nextPlayer.hand.append(deck[1])
+
+    deck.pop(0)
+    deck.pop(1)
 
 main()
