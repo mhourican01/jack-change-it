@@ -20,10 +20,7 @@ def main():
     print("The upcard is: " + str(upcard.rank) + " of " + upcard.suit)
 
     # Controlling turns
-    for p in players:
-
-        print("Player " + str(p.number) + ", it's your turn.")
-        displayCards(p)
+    playTurn(upcard)
 
 # Creates card objects, and adds them to deck
 def createDeck():
@@ -91,17 +88,43 @@ def displayCards(p):
 
         print(str(playableCards.index(c) + 1) + ".", str(c.rank) + " of " + c.suit)
 
-    # Asking user to select card
-    noOfPlayers = input("Which would you like to play? ")
+    return playableCards
 
-    for c in playableCards:
+def playTurn(upcard):
 
-        if (noOfPlayers == playableCards.index(c) + 1):
+    # Controlling turns
+    for p in players:
+
+        print("Player " + str(p.number) + ", it's your turn.")
+        playableCards = displayCards(p)
+
+        if not playableCards:
+            print("You have no playable cards! Draw two.")
+            p.hand.append(deck[0])
+            p.hand.append(deck[1])
+
+            deck.pop(0)
+            deck.pop(1)
             
-            # upcard = c
-            p.hand.remove(c)
+        else:
+            # Asking user to select card
+            selectedCard = input("What would you like to do? ")
 
-    print("Player " + str(p.number) + ", you have " + str(len(p.hand)) + " cards remaining.")
-    print("The new upcard is " + str(upcard.rank) + " of " + upcard.suit)
+            for c in playableCards:
+
+                if int(selectedCard) == (playableCards.index(c) + 1):
+                    
+                    # Change upcard to card user played
+                    upcard = c
+
+                    # Remove played card from hand
+                    p.hand.remove(c)
+
+        print("Player " + str(p.number) + ", you have " + str(len(p.hand)) + " cards remaining.")
+        print("There are " + str(len(deck)) + " cards remaining in the deck.")
+        print("The upcard is " + str(upcard.rank) + " of " + upcard.suit)
+
+        if p.number == len(players):
+            playTurn(upcard)
 
 main()
