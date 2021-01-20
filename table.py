@@ -17,7 +17,8 @@ def main():
     # Setting upcard to first card in deck
     upcard = deck[0]
 
-    print("The upcard is: " + str(upcard.rank) + " of " + upcard.suit)
+    print("There are " + str(len(deck)) + " cards left in the deck.")
+    print("The upcard is " + str(upcard.rank) + " of " + upcard.suit + ".")
 
     # Controlling turns
     playTurn(upcard)
@@ -37,12 +38,23 @@ def createDeck():
 def initialisePlayers():
 
     noOfPlayers = input("How many players are there? ")
-
-    # Creating player objects until user input, number of players, is reached
-    # Player hand set to null until cards are dealt
-    for n in range(1, (int(noOfPlayers) + 1)):
-        p = Player(n, None)
-        players.append(p)
+    
+    try:
+        if int(noOfPlayers) < 2:
+            print("That's too few players! Please enter a number between 2-6.")
+            initialisePlayers()
+        elif int(noOfPlayers) > 6:
+            print("That's too many players! Please enter a number between 2-6.")
+            initialisePlayers()
+        else:
+            # Creating player objects until user input, number of players, is reached
+            # Player hand set to null until cards are dealt
+            for n in range(1, (int(noOfPlayers) + 1)):
+                p = Player(n, None)
+                players.append(p)
+    except ValueError:
+        print("That's not a number! Please enter a number between 2-6.")
+        initialisePlayers()
 
 # Assigns to each player seven cards, removing them from deck
 def dealCards():
@@ -81,13 +93,6 @@ def displayCards(p):
             
             playableCards.append(c)
 
-    print("You can play:")
-
-    # Displaying playable cards beside number for selection
-    for c in playableCards:
-
-        print(str(playableCards.index(c) + 1) + ".", str(c.rank) + " of " + c.suit)
-
     return playableCards
 
 def playTurn(upcard):
@@ -107,6 +112,14 @@ def playTurn(upcard):
             deck.pop(1)
             
         else:
+
+            print("You can play:")
+
+            # Displaying playable cards beside number for selection
+            for c in playableCards:
+
+                print(str(playableCards.index(c) + 1) + ".", str(c.rank) + " of " + c.suit)
+
             # Asking user to select card
             selectedCard = input("What would you like to do? ")
 
@@ -114,15 +127,21 @@ def playTurn(upcard):
 
                 if int(selectedCard) == (playableCards.index(c) + 1):
                     
-                    # Change upcard to card user played
-                    upcard = c
+                    if len(p.hand) > 1:
+                        # Change upcard to card user played
+                        upcard = c
 
-                    # Remove played card from hand
-                    p.hand.remove(c)
+                        # Remove played card from hand
+                        p.hand.remove(c)
+                    else:
+                        print("You have played all your cards. You are the winner!")
 
-        print("Player " + str(p.number) + ", you have " + str(len(p.hand)) + " cards remaining.")
-        print("There are " + str(len(deck)) + " cards remaining in the deck.")
-        print("The upcard is " + str(upcard.rank) + " of " + upcard.suit)
+        print("Player " + str(p.number) + ", you have " + str(len(p.hand)) + " cards left.")
+        if len(deck) == 1:
+            print("There is " + str(len(deck)) + " card left in the deck.")
+        else:
+            print("There are " + str(len(deck)) + " cards left in the deck.")
+        print("The upcard is " + str(upcard.rank) + " of " + upcard.suit + ".")
 
         if p.number == len(players):
             playTurn(upcard)
