@@ -1,3 +1,4 @@
+# Constructor for card objects, possessing a rank and suit
 class Card:
 
   def __init__(self, suit, rank):
