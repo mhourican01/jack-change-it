@@ -104,7 +104,9 @@ def playTurn(upcard):
         playableCards = displayCards(p)
 
         if not playableCards:
+
             print("You have no playable cards! Draw a card.")
+
             p.hand.append(deck[0])
 
             deck.pop(0)
@@ -127,6 +129,11 @@ def playTurn(upcard):
                     if c.rank == 2:
                         drawTwoCards(p)
 
+                    if c.rank == 8:
+                        
+                        upcard = c
+                        break
+
                     if len(p.hand) > 1:
                         # Change upcard to card user played
                         upcard = c
@@ -143,20 +150,38 @@ def playTurn(upcard):
             print("There are " + str(len(deck)) + " cards left in the deck.")
         print("The upcard is " + str(upcard.rank) + " of " + upcard.suit + ".")
 
+        if upcard.rank == 8:
+            continue
+
         if p.number == len(players):
             playTurn(upcard)
 
 def drawTwoCards(p):
 
-    currentPlayerIndex = players.index(p)
-    nextPlayer = players[currentPlayerIndex + 1]
+    if p.number == len(players):
+        nextPlayer = players.index(0)
+    else:
+        nextPlayer = players[players.index(p) + 1]
 
-    print("You have played a Two! Player " + str(nextPlayer.number) + "must draw two cards.")
+    hasTwo = False
 
-    nextPlayer.hand.append(deck[0])
-    nextPlayer.hand.append(deck[1])
+    for c in nextPlayer.hand:
 
-    deck.pop(0)
-    deck.pop(1)
+        if c.rank == 2:
+
+            hasTwo = True
+            break
+
+    if not hasTwo:
+
+        print("You have played a Two! Player " + str(nextPlayer.number) + " must draw two cards.")
+
+        nextPlayer.hand.append(deck[0])
+        nextPlayer.hand.append(deck[1])
+
+        deck.pop(0)
+        deck.pop(1)
+
+#def skipTurn():
 
 main()
