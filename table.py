@@ -6,6 +6,7 @@ suits = ['Clubs', 'Diamonds', 'Hearts', 'Spades']
 ranks = [2, 3, 4, 5, 6, 7, 8, 9, 10, 'Jack', 'Queen', 'King', 'Ace']
 deck = []
 players = []
+discardPile =[]
 
 def main():
 
@@ -125,25 +126,25 @@ def playTurn(upcard):
             for c in playableCards:
 
                 if int(selectedCard) == (playableCards.index(c) + 1):
-                    
-                    if c.rank == 2:
-                        drawTwoCards(p)
-
-                    if c.rank == 8:
-                        
-                        upcard = c
-                        break
 
                     if len(p.hand) > 1:
-                        # Change upcard to card user played
-                        upcard = c
 
-                        # Remove played card from hand
-                        p.hand.remove(c)
+                        if c.rank == 2:
+
+                            drawTwoCards(p)
+                        if c.rank == 8:
+                            
+                            upcard = c
+                            break
+                        if c.rank == 'Queen' and len(players) >= 3:
+
+                            players.reverse()
+                        updateUpcard(upcard, p, c)
                     else:
                         print("You have played all your cards. You are the winner!")
 
         print("Player " + str(p.number) + ", you have " + str(len(p.hand)) + " cards left.")
+
         if len(deck) == 1:
             print("There is " + str(len(deck)) + " card left in the deck.")
         else:
@@ -182,6 +183,15 @@ def drawTwoCards(p):
         deck.pop(0)
         deck.pop(1)
 
-#def skipTurn():
+def updateUpcard(upcard, p, c):
+
+    # Add upcard to discard pile
+    discardPile.append(upcard)
+    
+    # Change upcard to most latest card played
+    upcard = c
+
+    # Remove played card from hand
+    p.hand.remove(c)
 
 main()
