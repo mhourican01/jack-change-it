@@ -3,7 +3,7 @@ from card import Card
 import random
 
 suits = ['Clubs', 'Diamonds', 'Hearts', 'Spades']
-ranks = [2, 3, 4, 5, 6, 7, 8, 9, 10, 'Jack', 'Queen', 'King', 'Ace']
+ranks = [8, 8, 'Queen', 5, 6, 7, 8, 9, 10, 'Jack', 'Queen', 'King', 'Ace']
 deck = []
 players = []
 discardPile =[]
@@ -24,8 +24,12 @@ def main():
     print("There are " + str(len(deck)) + " cards left in the deck.")
     print("The upcard is " + str(upcard.rank) + " of " + upcard.suit + ".")
 
+    # Inelegant
+    global isEightPlayed
+    isEightPlayed = False
+
     # Controlling turns
-    playTurn(upcard)
+    playTurn(upcard, isEightPlayed)
 
 # Creates card objects, and adds them to deck
 def createDeck():
@@ -80,7 +84,6 @@ def dealCards():
             deck.remove(deck[count])
         # Setting player's hand to temporary hand
         p.hand = hand
-
 # Displays active player's hand, and playable cards
 def displayCards(p):
 
@@ -100,12 +103,16 @@ def displayCards(p):
 
     return playableCards
 
-def playTurn(upcard):
+def playTurn(upcard, isEightPlayed):
 
     # Controlling turns
     for p in players:
 
-        activePlayer = p
+        if isEightPlayed:
+            activePlayer = players[activePlayer.number + 1]
+        else:
+            activePlayer = p
+
         isEightPlayed = False
 
         print("Player " + str(activePlayer.number) + ", it's your turn.")
@@ -119,9 +126,9 @@ def playTurn(upcard):
 
             activePlayer.hand.append(deck[0])
 
-            deck.pop(0)
-            
+            deck.pop(0) 
         else:
+
             print()
             print("You can play:")
 
@@ -137,21 +144,18 @@ def playTurn(upcard):
             for c in playableCards:
 
                 if int(selectedCard) == (playableCards.index(c) + 1):
-
+                    # Check that selected card is not player's last
                     if len(activePlayer.hand) > 1:
-
+                        # Special card behaviours
                         if c.rank == 2:
-
                             drawTwoCards(activePlayer)
-
+                        if upcard.rank == 8:
+                            isEightPlayed = True
                         if c.rank == 'Queen' and len(players) >= 3:
-
                             players.reverse()
                         upcard = updateUpcard(upcard, activePlayer, c)
-                        
                     else:
                         print("You have played all your cards. You are the winner!")
-
         print("Player " + str(activePlayer.number) + ", you have " + str(len(activePlayer.hand)) + " cards left.")
         print()
 
@@ -160,17 +164,10 @@ def playTurn(upcard):
         else:
             print("There are " + str(len(deck)) + " cards left in the deck. Discard pile: " + str(len(discardPile)))
 
-
-
         print("The upcard is " + str(upcard.rank) + " of " + upcard.suit + ".")
         print()
 
-        if upcard.rank == 8:
-            
-            activePlayer = players[activePlayer.number + 1]
-            isEightPlayed = True
-
-        if activePlayer.number == len(players):
+        if players.index(activePlayer) == len(players) - 1:
             playTurn(upcard)
 
 def drawTwoCards(p):
