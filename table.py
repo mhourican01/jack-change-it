@@ -108,10 +108,21 @@ def playTurn(upcard, isEightPlayed):
     # Controlling turns
     for p in players:
 
+        print("player number and index before active: " + str(p.number) + " / " + str(players.index(p)))
+
+        activePlayer = p
+
         if isEightPlayed:
-            activePlayer = players[activePlayer.number + 1]
+            if players.index(activePlayer) == len(players) - 2:
+                activePlayer = players[0]
+            elif players.index(activePlayer) == len(players) - 1:
+                activePlayer = players[1]
+            else:
+                activePlayer = players[players.index(p) + 1]
         else:
-            activePlayer = p
+            activePlayer = activePlayer + 1
+
+        print("player number and index after active: " + str(p.number) + " / " + str(players.index(p)))
 
         isEightPlayed = False
 
@@ -149,7 +160,7 @@ def playTurn(upcard, isEightPlayed):
                         # Special card behaviours
                         if c.rank == 2:
                             drawTwoCards(activePlayer)
-                        if upcard.rank == 8:
+                        if c.rank == 8:
                             isEightPlayed = True
                         if c.rank == 'Queen' and len(players) >= 3:
                             players.reverse()
@@ -168,7 +179,7 @@ def playTurn(upcard, isEightPlayed):
         print()
 
         if players.index(activePlayer) == len(players) - 1:
-            playTurn(upcard)
+            playTurn(upcard, isEightPlayed)
 
 def drawTwoCards(p):
 
