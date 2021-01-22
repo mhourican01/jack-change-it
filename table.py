@@ -25,15 +25,15 @@ def main():
     print("The upcard is " + str(upcard.rank) + " of " + upcard.suit + ".")
 
     # Inelegant
-    global firstTurn
-    firstTurn = True
+    global hasGameBegun
+    hasGameBegun = False
 
     # Very inelegant
     global isEightPlayed
     isEightPlayed = False
 
     # Controlling turns
-    playTurn(upcard, firstTurn, isEightPlayed)
+    playTurn(upcard, hasGameBegun, isEightPlayed)
 
 # Creates card objects, and adds them to deck
 def createDeck():
@@ -107,30 +107,42 @@ def displayCards(p):
 
     return playableCards
 
-def playTurn(upcard, firstTurn, isEightPlayed):
+def playTurn(upcard, hasGameBegun, isEightPlayed):
 
+    print("entered method")
     # Controlling turns
     for p in range(len(players)):
 
-        if firstTurn:
-            activePlayer = players[0]
-        elif isEightPlayed:
+        print("eight value at start: " + str(isEightPlayed))
 
-            skippedPlayer = players[players.index(activePlayer) + 1]
-            print("Player " + str(skippedPlayer.number) + ", skip a turn!")
-            if players.index(activePlayer) == len(players) - 2:
-                activePlayer = players[0]
-            elif players.index(activePlayer) == len(players) - 1:
-                activePlayer = players[1]
-            else:
-                activePlayer = players[players.index(activePlayer) + 2]
+        print("entered loop")
+        
+        if not hasGameBegun:
+            activePlayer = players[p]
+            print("active player: " + str(activePlayer.number))
+            hasGameBegun = True
         else:
             activePlayer = players[players.index(activePlayer) + 1]
+
+        if isEightPlayed:
+            
+            print("Player " + str(activePlayer.number) + ", skip a turn!")
+            if players.index(activePlayer) == 0:
+                print("penultimate player played eight")
+                activePlayer = players[1]
+            elif players.index(activePlayer) == len(players) - 1:
+                print("last player played eight")
+                activePlayer = players[0]
+                print("new active player number: " + str(activePlayer.number))
+            else:
+                activePlayer = players[players.index(activePlayer) + 1]
 
         isEightPlayed = False
 
         print("Player " + str(activePlayer.number) + ", it's your turn.")
+        print("index: " + str(players.index(activePlayer)))
         print()
+
         playableCards = displayCards(activePlayer)
 
         if not playableCards:
@@ -140,7 +152,7 @@ def playTurn(upcard, firstTurn, isEightPlayed):
 
             activePlayer.hand.append(deck[0])
 
-            deck.pop(0) 
+            deck.pop(0)
         else:
 
             print()
@@ -183,12 +195,16 @@ def playTurn(upcard, firstTurn, isEightPlayed):
         print("The upcard is " + str(upcard.rank) + " of " + upcard.suit + ".")
         print()
 
-        firstTurn = False
+        # firstTurn = False
+
+        print("eight value at end: " + str(isEightPlayed))
+
+        
 
         if players.index(activePlayer) == len(players) - 1 and (activePlayer.number == 1 or activePlayer.number == len(players)):
 
-            firstTurn = True
-            playTurn(upcard, firstTurn, isEightPlayed)
+            hasGameBegun = False
+            playTurn(upcard, hasGameBegun, isEightPlayed)
 
 def drawTwoCards(p):
 
