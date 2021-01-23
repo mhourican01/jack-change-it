@@ -188,9 +188,7 @@ def playTurn(upcard, hasGameBegun, isEightPlayed):
 
         print("The upcard is " + str(upcard.rank) + " of " + upcard.suit + ".")
         print()
-
-        print("eight value at end: " + str(isEightPlayed))
-
+        
         if players.index(activePlayer) == len(players) - 1 and (activePlayer.number == 1 or activePlayer.number == len(players)):
 
             hasGameBegun = False
