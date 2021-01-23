@@ -3,7 +3,7 @@ from card import Card
 import random
 
 suits = ['Clubs', 'Diamonds', 'Hearts', 'Spades']
-ranks = [8, 8, 'Queen', 5, 6, 7, 8, 9, 10, 'Jack', 'Queen', 'King', 'Ace']
+ranks = [2, 3, 4, 5, 6, 7, 8, 9, 10, 'Jack', 'Queen', 'King', 'Ace']
 deck = []
 players = []
 discardPile =[]
@@ -109,15 +109,11 @@ def displayCards(p):
 
 def playTurn(upcard, hasGameBegun, isEightPlayed):
 
-    print("entered method")
     # Controlling turns
     for p in range(len(players)):
-
-        print("eight value at start: " + str(isEightPlayed))
-
-        print("entered loop")
         
         if not hasGameBegun:
+
             activePlayer = players[p]
             print("active player: " + str(activePlayer.number))
             hasGameBegun = True
@@ -128,19 +124,17 @@ def playTurn(upcard, hasGameBegun, isEightPlayed):
             
             print("Player " + str(activePlayer.number) + ", skip a turn!")
             if players.index(activePlayer) == 0:
-                print("penultimate player played eight")
+                
                 activePlayer = players[1]
             elif players.index(activePlayer) == len(players) - 1:
-                print("last player played eight")
+                
                 activePlayer = players[0]
-                print("new active player number: " + str(activePlayer.number))
             else:
                 activePlayer = players[players.index(activePlayer) + 1]
 
         isEightPlayed = False
 
         print("Player " + str(activePlayer.number) + ", it's your turn.")
-        print("index: " + str(players.index(activePlayer)))
         print()
 
         playableCards = displayCards(activePlayer)
@@ -195,11 +189,7 @@ def playTurn(upcard, hasGameBegun, isEightPlayed):
         print("The upcard is " + str(upcard.rank) + " of " + upcard.suit + ".")
         print()
 
-        # firstTurn = False
-
         print("eight value at end: " + str(isEightPlayed))
-
-        
 
         if players.index(activePlayer) == len(players) - 1 and (activePlayer.number == 1 or activePlayer.number == len(players)):
 
