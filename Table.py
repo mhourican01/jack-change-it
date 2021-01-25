@@ -5,7 +5,7 @@ from DeckManager import *
 import random
 
 suits = ['Clubs', 'Diamonds', 'Hearts', 'Spades']
-ranks = ['Ace', 2, 3, 4, 5, 6, 7, 8, 'Jack', 'Jack', 'Jack', 'Queen', 'King']
+ranks = ['Ace', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'Jack', 'Queen', 'King']
 deck = []
 players = []
 discardPile =[]
@@ -15,7 +15,7 @@ def main():
     createDeck(suits, ranks, deck)
     initialisePlayers()
     dealCards()
-    
+
     global upcard
     # Setting upcard to first card in deck
     upcard = deck[0]
@@ -27,7 +27,7 @@ def main():
     print("The upcard is " + str(upcard.rank) + " of " + upcard.suit + ".")
 
     # Controlling turns
-    playTurn(upcard)
+    playTurn(upcard, deck)
 
 # Asks user to input number of players, and creates as many player objects
 def initialisePlayers():
@@ -71,6 +71,7 @@ def dealCards():
             deck.remove(deck[count])
         # Setting player's hand to temporary hand
         p.hand = hand
+
 # Displays active player's hand, and playable cards
 def displayCards(p):
 
@@ -90,7 +91,7 @@ def displayCards(p):
 
     return playableCards
 
-def playTurn(upcard):
+def playTurn(upcard, deck):
 
     gameWon = False
     isFirstTurn = True
@@ -151,27 +152,34 @@ def playTurn(upcard):
                     if len(activePlayer.hand) > 1:
                         # Trick card behaviours
                         if c.isTrick == True:
-                            isTrickPlayed = True
-                        if c.rank == 'Jack':
-                            isJackPlayed = True
-                            upcard = updateUpcard(discardPile, upcard, c, activePlayer, isJackPlayed, suits)
-                            
-                        if c.rank == 'Queen' and len(players) >= 3:
 
-                            players.reverse()
-                            print("Players reversed!")
+                            isTrickPlayed = True
+                        
+                            if c.rank == 'Jack':
+                                isJackPlayed = True
+                                upcard = updateUpcard(discardPile, upcard, c, activePlayer, isJackPlayed, suits) 
+                            elif c.rank == 'Queen' and len(players) >= 3:
+                                players.reverse()
+                                print("Players reversed!")
+                                
                         if not isJackPlayed:
                             upcard = updateUpcard(discardPile, upcard, c, activePlayer, isJackPlayed, suits)
                     else:
+                        print()
                         print("You have played all your cards. You are the winner!")
 
         print("Player " + str(activePlayer.number) + ", you have " + str(len(activePlayer.hand)) + " cards left.")
         print()
 
+        if len(deck) == 0:
+            print("The deck is empty! The discard pile is the new deck.")
+            deck = discardPile.copy()
+            discardPile.clear()
+
         if len(deck) == 1:
             print("There is " + str(len(deck)) + " card left in the deck.")
         else:
-            print("There are " + str(len(deck)) + " cards left in the deck. Discard pile: " + str(len(discardPile)))
+            print("There are " + str(len(deck)) + " cards left in the deck.")
 
         print("The upcard is " + str(upcard.rank) + " of " + upcard.suit + ".")
         print()
