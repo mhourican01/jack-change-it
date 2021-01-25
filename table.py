@@ -1,5 +1,5 @@
-from player import Player
-from card import Card
+from Player import Player
+from Card import Card
 import random
 
 suits = ['Clubs', 'Diamonds', 'Hearts', 'Spades']
@@ -109,13 +109,14 @@ def displayCards(p):
 
 def playTurn(upcard, hasGameBegun, isEightPlayed):
 
+    gameWon = False
+
     # Controlling turns
-    for p in range(len(players)):
+    while not gameWon:
         
         if not hasGameBegun:
 
-            activePlayer = players[p]
-            print("active player: " + str(activePlayer.number))
+            activePlayer = players[0]
             hasGameBegun = True
         else:
             activePlayer = players[players.index(activePlayer) + 1]
@@ -188,7 +189,7 @@ def playTurn(upcard, hasGameBegun, isEightPlayed):
 
         print("The upcard is " + str(upcard.rank) + " of " + upcard.suit + ".")
         print()
-        
+
         if players.index(activePlayer) == len(players) - 1 and (activePlayer.number == 1 or activePlayer.number == len(players)):
 
             hasGameBegun = False
