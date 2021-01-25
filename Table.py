@@ -5,7 +5,7 @@ from DeckManager import *
 import random
 
 suits = ['Clubs', 'Diamonds', 'Hearts', 'Spades']
-ranks = [2, 3, 4, 5, 6, 7, 8, 9, 10, 'Jack', 'Queen', 'King', 'Ace']
+ranks = ['Ace', 2, 3, 4, 5, 6, 7, 8, 'Jack', 'Jack', 'Jack', 'Queen', 'King']
 deck = []
 players = []
 discardPile =[]
@@ -98,6 +98,8 @@ def playTurn(upcard):
 
     # Controlling turns
     while not gameWon:
+
+        isJackPlayed = False
         
         if isFirstTurn:
 
@@ -106,12 +108,11 @@ def playTurn(upcard):
         else:
             activePlayer = players[players.index(activePlayer) + 1]
 
-        #if isTwoPlayed:
-        #   drawTwoCards(activePlayer, players, deck)
-
         if isTrickPlayed:
+            if upcard.rank == 'Ace' and upcard.suit == 'Hearts':
+                drawFiveCards(activePlayer, players, deck)
             if upcard.rank == 2:
-                drawTwoCards(activePlayer, players, deck)
+                drawTwoCards(activePlayer, deck)
             elif upcard.rank == 8:
                 print("Player " + str(activePlayer.number) + ", skip a turn!")
                 if players.index(activePlayer) == len(players) - 1:
@@ -151,16 +152,19 @@ def playTurn(upcard):
                         # Trick card behaviours
                         if c.isTrick == True:
                             isTrickPlayed = True
-
+                        if c.rank == 'Jack':
+                            isJackPlayed = True
+                            upcard = updateUpcard(discardPile, upcard, c, activePlayer, isJackPlayed, suits)
+                            
                         if c.rank == 'Queen' and len(players) >= 3:
 
                             players.reverse()
                             print("Players reversed!")
-
-                        upcard = updateUpcard(discardPile, upcard, c, activePlayer)
+                        if not isJackPlayed:
+                            upcard = updateUpcard(discardPile, upcard, c, activePlayer, isJackPlayed, suits)
                     else:
                         print("You have played all your cards. You are the winner!")
-                        
+
         print("Player " + str(activePlayer.number) + ", you have " + str(len(activePlayer.hand)) + " cards left.")
         print()
 
