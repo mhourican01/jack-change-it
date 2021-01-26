@@ -2,7 +2,6 @@ from Player import Player
 from Card import Card
 from CardManager import *
 from DeckManager import *
-import random
 
 suits = ['Clubs', 'Diamonds', 'Hearts', 'Spades']
 ranks = ['Ace', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'Jack', 'Queen', 'King']
@@ -14,7 +13,7 @@ def main():
 
     createDeck(suits, ranks, deck)
     initialisePlayers()
-    dealCards()
+    dealStartingHand(players, deck)
 
     global upcard
     # Setting upcard to first card in deck
@@ -51,26 +50,6 @@ def initialisePlayers():
     except ValueError:
         print("That's not a number! Please enter a number between 2-6.")
         initialisePlayers()
-
-# Assigns to each player seven cards, removing them from deck
-def dealCards():
-
-    random.shuffle(deck)
-    startingHand = 7
-    
-    for p in players:
-
-        # Temporary hand to populate
-        hand = []
-
-        # Looping until starting hand of seven cards is reached
-        for count in range(0, startingHand):
-
-            #Adding card to hand, and removing from deck
-            hand.append(deck[count])
-            deck.remove(deck[count])
-        # Setting player's hand to temporary hand
-        p.hand = hand
 
 # Displays active player's hand, and playable cards
 def displayCards(p):
