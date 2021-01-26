@@ -2,6 +2,7 @@ from Player import Player
 from Card import Card
 from CardManager import *
 from DeckManager import *
+from PlayerManager import *
 
 suits = ['Clubs', 'Diamonds', 'Hearts', 'Spades']
 ranks = ['Ace', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'Jack', 'Queen', 'King']
@@ -12,7 +13,7 @@ discardPile =[]
 def main():
 
     createDeck(suits, ranks, deck)
-    initialisePlayers()
+    initialisePlayers(players)
     dealStartingHand(players, deck)
 
     global upcard
@@ -28,47 +29,7 @@ def main():
     # Controlling turns
     playTurn(upcard, deck)
 
-# Asks user to input number of players, and creates as many player objects
-def initialisePlayers():
-
-    noOfPlayers = input("How many players are there? ")
-    print()
-    
-    try:
-        if int(noOfPlayers) < 2:
-            print("That's too few players! Please enter a number between 2-6.")
-            initialisePlayers()
-        elif int(noOfPlayers) > 6:
-            print("That's too many players! Please enter a number between 2-6.")
-            initialisePlayers()
-        else:
-            # Creating player objects until user input, number of players, is reached
-            # Player hand set to null until cards are dealt
-            for n in range(1, (int(noOfPlayers) + 1)):
-                p = Player(n, None)
-                players.append(p)
-    except ValueError:
-        print("That's not a number! Please enter a number between 2-6.")
-        initialisePlayers()
-
-# Displays active player's hand, and playable cards
-def displayCards(p):
-
-    # Temporary list to store playable cards
-    playableCards = []
-
-    print("Your cards are:")
-
-    for c in p.hand:
-
-        print(str(c.rank) + " of " + c.suit)
-
-        # If a card matches the upcard in rank or suit, it is a playable card
-        if (c.rank == upcard.rank or c.suit == upcard.suit):
-            
-            playableCards.append(c)
-
-    return playableCards
+# Nts: Consider making below func main
 
 def playTurn(upcard, deck):
 
@@ -105,7 +66,7 @@ def playTurn(upcard, deck):
         print("Player " + str(activePlayer.number) + ", it's your turn.")
         print()
 
-        playableCards = displayCards(activePlayer)
+        playableCards = displayHand(activePlayer, upcard)
 
         if not playableCards:
 
